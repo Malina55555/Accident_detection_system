@@ -1,0 +1,139 @@
+body {
+
+    margin: 0;
+
+    padding: 0;
+
+    background: #f4f6f9;
+
+    font-family:
+        Arial,
+        sans-serif;
+}
+
+
+.container {
+
+    width: 900px;
+
+    margin: 40px auto;
+}
+
+
+h1 {
+
+    text-align: center;
+
+    margin-bottom: 40px;
+
+    color: #222;
+}
+
+
+.card {
+
+    background: white;
+
+    padding: 25px;
+
+    margin-bottom: 25px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 2px 8px rgba(
+            0,
+            0,
+            0,
+            0.1
+        );
+}
+
+
+h2 {
+
+    margin-top: 0;
+
+    color: #333;
+}
+
+
+form {
+
+    display: flex;
+
+    gap: 15px;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+}
+
+
+input[type="file"] {
+
+    padding: 8px;
+}
+
+
+select {
+
+    padding: 10px;
+
+    border-radius: 8px;
+
+    border: 1px solid #ccc;
+}
+
+
+button {
+
+    padding:
+        10px 18px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #1976d2;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition: 0.2s;
+}
+
+
+button:hover {
+
+    background: #125ca1;
+}
+
+
+.reports-list {
+
+    padding-left: 20px;
+}
+
+
+.reports-list li {
+
+    margin-bottom: 10px;
+}
+
+
+.reports-list a {
+
+    color: #1976d2;
+
+    text-decoration: none;
+}
+
+
+.reports-list a:hover {
+
+    text-decoration: underline;
+}

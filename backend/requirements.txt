@@ -1,0 +1,10 @@
+flask
+opencv-python
+torch
+torchvision
+transformers
+accelerate
+ultralytics
+reportlab
+python-multipart
+pydantic-settings

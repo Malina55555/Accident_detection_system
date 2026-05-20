@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        ДТП Детекция
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}"
+    >
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Система детекции ДТП
+    </h1>
+
+    <div class="card">
+
+        <h2>
+            Обработка видео
+        </h2>
+
+        <form
+            action="/upload"
+            method="post"
+            enctype="multipart/form-data"
+        >
+
+            <input
+                type="file"
+                name="video"
+                accept="video/*"
+                required
+            >
+
+            <button type="submit">
+                Загрузить видео
+            </button>
+
+        </form>
+
+    </div>
+
+    <div class="card">
+
+        <h2>
+            Потоковая обработка
+        </h2>
+
+        <form
+            action="/start_stream"
+            method="post"
+        >
+
+            <label>
+                Источник:
+            </label>
+
+            <select
+                name="source_type"
+            >
+
+                <option value="webcam">
+                    Webcam
+                </option>
+
+                <option value="rtsp">
+                    RTSP Stream
+                </option>
+
+            </select>
+
+            <button type="submit">
+                Запустить стрим
+            </button>
+
+        </form>
+
+    </div>
+
+    <div class="card">
+
+        <h2>
+            Сгенерированные отчёты
+        </h2>
+
+        {% if reports %}
+
+            <ul class="reports-list">
+
+                {% for report in reports %}
+
+                    <li>
+
+                        <a
+                            href="/reports/{{ report }}"
+                        >
+                            {{ report }}
+                        </a>
+
+                    </li>
+
+                {% endfor %}
+
+            </ul>
+
+        {% else %}
+
+            <p>
+                Отчётов пока нет
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
