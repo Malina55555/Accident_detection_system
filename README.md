@@ -47,5 +47,6 @@ pip3 install -r /frontend_service/requirements.txt
 Запускаем автоматическую детекцию с видеофайла, выбрав файл, а затем нажав на кнопку "Start Video"
 
 ## Предпоказ
+[видео из презентации.webm](https://github.com/user-attachments/assets/d17678c1-1f40-44c5-b668-31e724b7aade)
 
 
