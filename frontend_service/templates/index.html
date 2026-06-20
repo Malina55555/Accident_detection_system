@@ -1,0 +1,296 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h1>
+    Accident Detection System
+</h1>
+
+<hr>
+
+<h2>
+    System Status
+</h2>
+
+<div id="status-container">
+    {% if status.service_available %}
+        {% if status.running %}
+            <p class="running" id="status-text">
+                Detector is running (State: {{ status.state }})
+            </p>
+        {% else %}
+            <p class="stopped" id="status-text">
+                Detector is stopped
+            </p>
+        {% endif %}
+    {% else %}
+        <p class="error" id="status-text">
+            Detector service unavailable
+        </p>
+    {% endif %}
+</div>
+
+<hr>
+
+<!-- Видеопоток -->
+<div class="video-container">
+    <h2>Video Stream</h2>
+    <div class="video-wrapper">
+        <img id="video-stream"
+             src="{{ url_for('video_feed') }}"
+             alt="Video Stream"
+             style="background-color: #333;">
+    </div>
+    <p class="video-note">Live stream from detector</p>
+</div>
+
+<hr>
+
+<div class="source-card">
+
+    <h2>
+        Webcam
+    </h2>
+
+    <form id="webcam-form" method="post" action="/start_webcam">
+        <button type="submit" id="start-webcam-btn">
+            Start Webcam
+        </button>
+    </form>
+
+    <br>
+
+    <form id="stop-form" method="post" action="/stop">
+        <button type="submit" id="stop-btn">
+            Stop
+        </button>
+    </form>
+
+</div>
+
+<hr>
+
+<div class="source-card">
+
+    <h2>
+        Video File
+    </h2>
+
+    <form id="video-form" method="post" action="/start_video" enctype="multipart/form-data">
+        <input type="file" name="video_file" accept="video/*" required>
+        <br><br>
+        <button type="submit">Start Video</button>
+    </form>
+
+    <br>
+
+    <form id="stop-form-video" method="post" action="/stop">
+        <button type="submit">Stop</button>
+    </form>
+
+</div>
+
+<div class="reports-section">
+    <h2>Generated Reports</h2>
+
+    <div id="reports-container">
+        {% if reports %}
+            <ul class="reports-list">
+                {% for report in reports %}
+                    <li>
+                        <a href="{{ url_for('download_report', filename=report.filename) }}">
+                            {{ report.name }}
+                        </a>
+                        <span class="report-date">{{ report.date }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="no-reports">No reports generated yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Функция обновления статуса
+    async function updateStatus() {
+        try {
+            const response = await fetch('/status');
+            const data = await response.json();
+
+            const statusText = document.getElementById('status-text');
+
+            if (data.service_available) {
+                if (data.running) {
+                    statusText.className = 'running';
+                    statusText.textContent = `Detector is running (State: ${data.state || 'unknown'})`;
+                    // Обновляем видеопоток (перезагружаем изображение)
+                    const videoStream = document.getElementById('video-stream');
+                    videoStream.src = "{{ url_for('video_feed') }}?" + new Date().getTime();
+                } else {
+                    statusText.className = 'stopped';
+                    statusText.textContent = 'Detector is stopped';
+                }
+            } else {
+                statusText.className = 'error';
+                statusText.textContent = 'Detector service unavailable';
+            }
+        } catch (error) {
+            console.error('Failed to update status:', error);
+        }
+    }
+
+    // Обновляем статус каждые 2 секунды
+    setInterval(updateStatus, 5000);
+
+    // Отправка формы веб-камеры
+    document.getElementById('webcam-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const startBtn = document.getElementById('start-webcam-btn');
+        startBtn.disabled = true;
+        startBtn.textContent = 'Starting...';
+
+        try {
+            const response = await fetch('/start_webcam', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                updateStatus();
+            } else {
+                console.error('Failed:', data.message);
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error: ' + error.message);
+        } finally {
+            startBtn.disabled = false;
+            startBtn.textContent = 'Start Webcam';
+        }
+    });
+
+    // Отправка формы остановки
+    document.getElementById('stop-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const stopBtn = document.getElementById('stop-btn');
+        stopBtn.disabled = true;
+        stopBtn.textContent = 'Stopping...';
+
+        try {
+            const response = await fetch('/stop', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                updateStatus();
+            } else {
+                console.error('Failed to stop:', data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            stopBtn.disabled = false;
+            stopBtn.textContent = 'Stop';
+        }
+    });
+
+    // Обработка формы видео
+    document.getElementById('video-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const startBtn = e.target.querySelector('button');
+        startBtn.disabled = true;
+        startBtn.textContent = 'Uploading...';
+
+        try {
+            const formData = new FormData(e.target);
+            const response = await fetch('/start_video', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                console.log('Video processing started:', data.video_path);
+                updateStatus();
+            } else {
+                console.error('Failed:', data.message);
+                alert('Error: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Error: ' + error.message);
+        } finally {
+            startBtn.disabled = false;
+            startBtn.textContent = 'Start Video';
+        }
+    });
+
+    // Обработка форм остановки
+    document.getElementById('stop-form-video').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const stopBtn = e.target.querySelector('button');
+        stopBtn.disabled = true;
+        stopBtn.textContent = 'Stopping...';
+
+        try {
+            const response = await fetch('/stop', { method: 'POST' });
+            const data = await response.json();
+            if (data.success) updateStatus();
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
+            stopBtn.disabled = false;
+            stopBtn.textContent = 'Stop';
+        }
+    });
+
+    // Функция обновления списка отчётов
+    async function updateReports() {
+        try {
+            const response = await fetch('/reports/list');
+            const reports = await response.json();
+
+            const reportsContainer = document.getElementById('reports-container');
+
+            if (reports.length === 0) {
+                reportsContainer.innerHTML = '<p class="no-reports">No reports generated yet.</p>';
+            } else {
+                let html = '<ul class="reports-list">';
+                for (const report of reports) {
+                    html += `
+                        <li>
+                            <a href="/reports/${report.filename}">
+                                ${report.name}
+                            </a>
+                            <span class="report-date">${report.date}</span>
+                        </li>
+                    `;
+                }
+                html += '</ul>';
+                reportsContainer.innerHTML = html;
+            }
+        } catch (error) {
+            console.error('Failed to update reports:', error);
+        }
+    }
+
+    // Обновляем список отчётов каждые 10 секунд
+    setInterval(updateReports, 10000);
+</script>
+
+{% endblock %}

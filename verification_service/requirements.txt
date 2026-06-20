@@ -1,0 +1,11 @@
+flask==2.3.0
+opencv-python==4.8.1
+ultralytics==8.0.200
+requests==2.31.0
+numpy==1.24.3
+pillow==10.0.0
+reportlab==4.0.4
+transformers==4.36.0
+torch==2.1.0
+accelerate==0.25.0
+qwen-vl-utils==0.0.1  # Если нужно для Qwen

@@ -1,0 +1,171 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+}
+
+h2 {
+    color: #555;
+    margin-top: 20px;
+}
+
+hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.source-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+input[type="text"],
+input[type="file"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 80%;
+}
+
+.running {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+.stopped {
+    color: #ff9800;
+    font-weight: bold;
+}
+
+.error {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.reports-section {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #ddd;
+}
+
+.reports-list {
+    list-style: none;
+    padding: 0;
+}
+
+.reports-list li {
+    padding: 10px;
+    margin: 5px 0;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reports-list a {
+    color: #2196F3;
+    text-decoration: none;
+}
+
+.reports-list a:hover {
+    text-decoration: underline;
+}
+
+.report-date {
+    color: #999;
+    font-size: 12px;
+}
+
+.no-reports {
+    color: #999;
+    font-style: italic;
+}
+
+.video-container {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.video-wrapper {
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 10px 0;
+}
+
+.video-wrapper img {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+.video-note {
+    font-size: 12px;
+    color: #999;
+    margin-top: 5px;
+}
+
+.source-card button {
+    margin-top: 5px;
+}
+
+.video-wrapper img {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    background: linear-gradient(45deg, #2c2c2c 25%, #3a3a3a 25%, #3a3a3a 50%, #2c2c2c 50%, #2c2c2c 75%, #3a3a3a 75%, #3a3a3a 100%);
+    background-size: 40px 40px;
+    min-height: 360px;
+}
+
+/* Анимация пульсации для заглушки */
+.video-wrapper img:not([src]) {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 1; }
+}
